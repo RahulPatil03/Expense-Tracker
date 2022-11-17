@@ -5,6 +5,5 @@ export default function Home() {
     <Head>
       <title>Expense Tracker</title>
     </Head>
-    Expense Tracker
   </>
 }
