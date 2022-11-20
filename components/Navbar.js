@@ -6,7 +6,7 @@ export default function Navbar() {
     return (
         <AppBar position="sticky">
             <Toolbar>
-                <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
+                <Typography variant="h5" component="div" flexGrow={1}>
                     Expense Tracker
                 </Typography>
             </Toolbar>
