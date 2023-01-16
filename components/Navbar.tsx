@@ -7,11 +7,12 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import { signIn, signOut, useSession } from "next-auth/react";
 import { useState } from 'react';
 
 export default function Navbar() {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [session, setSession] = useState(false); //will be removed
+    const { data: session } = useSession();
 
     return <>
         <AppBar>
@@ -20,22 +21,22 @@ export default function Navbar() {
                     Expense Tracker
                 </Typography>
                 {session ? (
-                    <IconButton onClick={e => setAnchorEl(e.currentTarget)}>
-                        <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                    <IconButton onClick={e => setAnchorEl(e.currentTarget)} aria-label='Profile Options'>
+                        <Avatar alt='Profile Image' src={session.user?.image || ''} />
                     </IconButton>
                 ) : (
-                    <Button onClick={() => setSession(true)}>Login</Button>
+                    <Button onClick={() => signIn('google')} aria-label='Login Button'>Login</Button>
                 )}
             </Toolbar>
         </AppBar>
         <Toolbar />
         <Menu open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)} anchorEl={anchorEl}>
-            <MenuItem>Menu Item 1</MenuItem>
+            <MenuItem onClick={() => console.log(session?.user)}>Profile</MenuItem>
             <MenuItem>Menu Item 2</MenuItem>
             <Divider />
             <MenuItem onClick={() => {
                 setAnchorEl(null);
-                setSession(false);
+                signOut();
             }}>Sign Out</MenuItem>
         </Menu>
     </>
