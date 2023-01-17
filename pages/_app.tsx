@@ -2,7 +2,7 @@ import Navbar from '@/components/Navbar';
 import '@/styles/globals.css';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { SessionProvider } from "next-auth/react";
+import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
 import { useMemo } from 'react';
 
