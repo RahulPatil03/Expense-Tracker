@@ -35,15 +35,27 @@ export default function Navbar() {
             <MenuItem onClick={async() => {
                 const response = await fetch('api/item').then(res => res.json());
                 console.log(response);
-            }}>Hit GET API</MenuItem>
+            }}>Hit Item GET API</MenuItem>
             <MenuItem onClick={async () => {
                 const response = await fetch('api/item', {
-                    method: 'PUT',
+                    method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ amount: 1 })
                 }).then(res => res.json());
                 console.log(response);
-            }}>Hit PUT API</MenuItem>
+            }}>Hit Item POST API</MenuItem>
+            <MenuItem onClick={async() => {
+                const response = await fetch('api/bucket').then(res => res.json());
+                console.log(response);
+            }}>Hit Bucket GET API</MenuItem>
+            <MenuItem onClick={async () => {
+                const response = await fetch('api/bucket', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount: 1 })
+                }).then(res => res.json());
+                console.log(response);
+            }}>Hit Bucket POST API</MenuItem>
             <Divider />
             <MenuItem onClick={() => {
                 setAnchorEl(null);
