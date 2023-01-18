@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { useState } from 'react';
 
-export default function Navbar() {
+export default function Layout({ children }: any) {
     const { data: session } = useSession();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -22,17 +22,16 @@ export default function Navbar() {
                 </Typography>
                 {session ? (
                     <IconButton onClick={e => setAnchorEl(e.currentTarget)} aria-label='Profile Options'>
-                        <Avatar alt='User' src={session.user?.image || ''} />
+                        <Avatar alt={session.user?.name || ''} src={session.user?.image || ''} />
                     </IconButton>
                 ) : (
-                    <Button onClick={() => signIn('google')} aria-label='Login Button'>Login</Button>
+                    <Button variant='outlined' color='inherit' onClick={() => signIn('google')} aria-label='Login Button'>Login</Button>
                 )}
             </Toolbar>
         </AppBar>
-        <Toolbar />
         <Menu open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)} anchorEl={anchorEl}>
             <MenuItem onClick={() => console.log(session?.user)}>Profile</MenuItem>
-            <MenuItem onClick={async() => {
+            <MenuItem onClick={async () => {
                 const response = await fetch('api/item').then(res => res.json());
                 console.log(response);
             }}>Hit Item GET API</MenuItem>
@@ -44,10 +43,6 @@ export default function Navbar() {
                 }).then(res => res.json());
                 console.log(response);
             }}>Hit Item POST API</MenuItem>
-            <MenuItem onClick={async() => {
-                const response = await fetch('api/bucket').then(res => res.json());
-                console.log(response);
-            }}>Hit Bucket GET API</MenuItem>
             <MenuItem onClick={async () => {
                 const response = await fetch('api/bucket', {
                     method: 'POST',
@@ -59,8 +54,10 @@ export default function Navbar() {
             <Divider />
             <MenuItem onClick={() => {
                 setAnchorEl(null);
-                signOut();
+                signOut({ redirect: false });
             }}>Sign Out</MenuItem>
         </Menu>
+        <Toolbar />
+        {session && children}
     </>
 }

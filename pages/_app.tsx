@@ -1,4 +1,4 @@
-import Navbar from '@/components/Navbar';
+import Layout from '@/components/layout';
 import '@/styles/globals.css';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -18,8 +18,9 @@ export default function App({ Component, pageProps: { session, ...pageProps } }:
   return (
     <SessionProvider session={session}>
       <ThemeProvider theme={theme}>
-        <Navbar />
-        <Component {...pageProps} />
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
       </ThemeProvider>
     </SessionProvider>
   );
