@@ -8,11 +8,16 @@ import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { signIn, signOut, useSession } from 'next-auth/react';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 export default function Layout({ children }: any) {
     const { data: session } = useSession();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+    const onSignOut = useCallback(() => {
+        setAnchorEl(null);
+        signOut({ redirect: false });
+    }, []);
 
     return <>
         <AppBar>
@@ -31,31 +36,8 @@ export default function Layout({ children }: any) {
         </AppBar>
         <Menu open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)} anchorEl={anchorEl}>
             <MenuItem onClick={() => console.log(session?.user)}>Profile</MenuItem>
-            <MenuItem onClick={async () => {
-                const response = await fetch('api/item').then(res => res.json());
-                console.log(response);
-            }}>Hit Item GET API</MenuItem>
-            <MenuItem onClick={async () => {
-                const response = await fetch('api/item', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ amount: 1 })
-                }).then(res => res.json());
-                console.log(response);
-            }}>Hit Item POST API</MenuItem>
-            <MenuItem onClick={async () => {
-                const response = await fetch('api/bucket', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ amount: 1 })
-                }).then(res => res.json());
-                console.log(response);
-            }}>Hit Bucket POST API</MenuItem>
             <Divider />
-            <MenuItem onClick={() => {
-                setAnchorEl(null);
-                signOut({ redirect: false });
-            }}>Sign Out</MenuItem>
+            <MenuItem onClick={onSignOut}>Sign Out</MenuItem>
         </Menu>
         <Toolbar />
         {session && children}

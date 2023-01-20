@@ -8,7 +8,7 @@ import { useMemo } from 'react';
 
 export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-
+  
   const theme = useMemo(() => createTheme({
     palette: {
       mode: prefersDarkMode ? 'dark' : 'light',
