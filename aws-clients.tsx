@@ -9,6 +9,6 @@ const config = {
     region: process.env.NEXT_PUBLIC_AWS_REGION
 }
 
-export const s3Client = new S3Client(config);
-
 export const dynamoDBClient = new DynamoDBClient(config);
+
+export const s3Client = new S3Client(config);

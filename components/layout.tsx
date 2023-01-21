@@ -8,7 +8,9 @@ import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { signIn, signOut, useSession } from 'next-auth/react';
+import Image from 'next/image';
 import { useCallback, useState } from 'react';
+import Guest from './guest';
 
 export default function Layout({ children }: any) {
     const { data: session } = useSession();
@@ -27,7 +29,9 @@ export default function Layout({ children }: any) {
                 </Typography>
                 {session ? (
                     <IconButton onClick={e => setAnchorEl(e.currentTarget)} aria-label='Profile Options'>
-                        <Avatar alt={session.user?.name || ''} src={session.user?.image || ''} />
+                        <Avatar>
+                            <Image alt={session.user?.name || ''} src={session.user?.image || ''} fill sizes='50vw' priority />
+                        </Avatar>
                     </IconButton>
                 ) : (
                     <Button variant='outlined' color='inherit' onClick={() => signIn('google')} aria-label='Login Button'>Login</Button>
@@ -40,6 +44,6 @@ export default function Layout({ children }: any) {
             <MenuItem onClick={onSignOut}>Sign Out</MenuItem>
         </Menu>
         <Toolbar />
-        {session && children}
+        {session ? children : <Guest />}
     </>
 }
