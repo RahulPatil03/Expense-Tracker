@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useCallback, useState } from 'react';
-import Guest from './guest';
+import Guest from './Guest';
 
 export default function Layout({ children }: any) {
     const { data: session } = useSession();
@@ -24,9 +24,7 @@ export default function Layout({ children }: any) {
     return <>
         <AppBar>
             <Toolbar>
-                <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
-                    Expense Tracker
-                </Typography>
+                <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>Expense Tracker</Typography>
                 {session ? (
                     <IconButton onClick={e => setAnchorEl(e.currentTarget)} aria-label='Profile Options'>
                         <Avatar>
