@@ -62,7 +62,7 @@ export default function Home({ data }: any) {
       Key: `${session?.user?.email}/${file}`
     }));
     setItems(items.filter((item: any) => item.date !== date));
-    dispatch({ type: 'deleteRecord', message: 'Record Deleted Successfully' });
+    dispatch({ type: 'openSnackbar', message: 'Record Deleted Successfully' });
   }, [dispatch, items, session?.user?.email]);
 
   return <>

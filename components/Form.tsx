@@ -43,7 +43,7 @@ export default function Form({ items, setItems }: any) {
 		}));
 
 		setItems([...items, { date, amount: parseInt(amount), description, file: file.name }]);
-		dispatch({ type: 'toggleBackdrop', open: false });
+		dispatch({ type: 'openSnackbar', message: 'Expense Added Successfully' });
 	}, [dispatch, items, session?.user?.email, setItems]);
 
 	return (

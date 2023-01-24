@@ -17,13 +17,11 @@ const initState = {
 function reducer(state: any, action: any) {
   switch (action.type) {
     case 'openSnackbar':
-      return { ...state, snackbarMessage: action.message, snackbarOpen: true };
+      return { backdropOpen: false, snackbarMessage: action.message, snackbarOpen: true };
     case 'closeSnackbar':
       return { ...state, snackbarOpen: false };
     case 'toggleBackdrop':
       return { ...state, backdropOpen: action.open };
-    case 'deleteRecord':
-      return { backdropOpen: false, snackbarMessage: action.message, snackbarOpen: true };
     default:
       return state;
   }
