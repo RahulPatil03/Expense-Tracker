@@ -1,23 +1,16 @@
 import { dynamoDBClient, s3Client } from '@/aws-clients';
+import ExpenseTable from '@/components/ExpenseTable';
 import Form from '@/components/Form';
 import { DeleteItemCommand, ScanCommand } from '@aws-sdk/client-dynamodb';
 import { DeleteObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import Backdrop from '@mui/material/Backdrop';
-import Button from '@mui/material/Button';
-import CircularProgress from '@mui/material/CircularProgress';
-import Snackbar from '@mui/material/Snackbar';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
 import { unstable_getServerSession } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useCallback, useState } from 'react';
 import { authOptions } from './api/auth/[...nextauth]';
+import { useAppContext } from './_app';
 
 export async function getServerSideProps({ req, res }: any) {
   const session = await unstable_getServerSession(req, res, authOptions);
@@ -43,20 +36,21 @@ export async function getServerSideProps({ req, res }: any) {
 export default function Home({ data }: any) {
   const { data: session } = useSession();
   const [items, setItems] = useState(data);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [openBackdrop, setOpenBackdrop] = useState(false);
+  const [_, dispatch] = useAppContext();
   const router = useRouter();
 
   const openFile = useCallback(async (file: string) => {
+    dispatch({ type: 'toggleBackdrop', open: true });
     const signedUrl = await getSignedUrl(s3Client, new GetObjectCommand({
       Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET,
       Key: `${session?.user?.email}/${file}`,
     }));
     router.push(signedUrl);
-  }, [router, session?.user?.email]);
+    dispatch({ type: 'toggleBackdrop', open: false });
+  }, [dispatch, router, session?.user?.email]);
 
   const deleteRecord = useCallback(async (date: number, file: string) => {
-    setOpenBackdrop(true);
+    dispatch({ type: 'toggleBackdrop', open: true });
     await dynamoDBClient.send(new DeleteItemCommand({
       TableName: process.env.NEXT_PUBLIC_AWS_TABLE_NAME,
       Key: {
@@ -68,45 +62,14 @@ export default function Home({ data }: any) {
       Key: `${session?.user?.email}/${file}`
     }));
     setItems(items.filter((item: any) => item.date !== date));
-    setOpenBackdrop(false);
-  }, [items, session?.user?.email]);
+    dispatch({ type: 'deleteRecord', message: 'Record Deleted Successfully' });
+  }, [dispatch, items, session?.user?.email]);
 
   return <>
     <Head>
       <title>Expense Tracker</title>
     </Head>
     <Form items={items} setItems={setItems} />
-    <Table sx={{ mx: 'auto', width: 'auto' }}>
-      <TableHead>
-        <TableRow>
-          <TableCell align='center'>Date</TableCell>
-          <TableCell>Amount</TableCell>
-          <TableCell align='center'>Description</TableCell>
-          <TableCell align='center'>File</TableCell>
-          <TableCell align='center'>Action</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {items.map(({ date, amount, description, file }: any) => (
-          <TableRow key={date}>
-            <TableCell align='center'>{new Date(date).toLocaleString()}</TableCell>
-            <TableCell>&#8377; {amount}</TableCell>
-            <TableCell align='center'>{description}</TableCell>
-            <TableCell align='center'>{file && <Button onClick={() => openFile(file)}>Open File</Button>}</TableCell>
-            <TableCell align='center'><Button onClick={() => deleteRecord(date, file)}>Delete Record</Button></TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-    <Snackbar
-      open={openSnackbar}
-      autoHideDuration={2000}
-      onClose={() => setOpenSnackbar(false)}
-      message="Expense Added Successfully"
-      ContentProps={{ sx: { justifyContent: 'center' } }}
-    />
-    <Backdrop open={openBackdrop}>
-      <CircularProgress />
-    </Backdrop>
+    <ExpenseTable items={items} openFile={openFile} deleteRecord={deleteRecord} />
   </>
 }
