@@ -1,4 +1,4 @@
-import Layout from '@/components/layout';
+import Layout from '@/components/Layout';
 import '@/styles/globals.css';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
