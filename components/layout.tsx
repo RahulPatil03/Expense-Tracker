@@ -51,7 +51,7 @@ export default function Layout({ children }: any) {
         </AppBar>
         <Toolbar />
         <Menu open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)} anchorEl={anchorEl}>
-            <MenuItem onClick={() => alert(session?.user)}>Profile</MenuItem>
+            <MenuItem onClick={() => alert(JSON.stringify(session?.user))}>Profile</MenuItem>
             <Divider />
             <MenuItem onClick={onSignOut}>Sign Out</MenuItem>
         </Menu>
