@@ -1,7 +1,9 @@
 import { dynamoDBClient, s3Client } from '@/aws-clients';
 import { PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
+import Backdrop from '@mui/material/Backdrop';
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 import InputAdornment from '@mui/material/InputAdornment';
 import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
@@ -12,10 +14,12 @@ import { SyntheticEvent, useCallback, useRef, useState } from 'react';
 export default function Form({ items, setItems }: any) {
 	const { data: session } = useSession();
 	const formRef = useRef<HTMLFormElement>(null);
-	const [open, setOpen] = useState(false);
+	const [openSnackbar, setOpenSnackbar] = useState(false);
+	const [openBackdrop, setOpenBackdrop] = useState(false);
 
 	const onSubmit = useCallback(async (event: SyntheticEvent) => {
 		event.preventDefault();
+		setOpenBackdrop(true);
 		const fd = new FormData(formRef.current as HTMLFormElement);
 
 		const amount = fd.get('amount') as string;
@@ -42,7 +46,8 @@ export default function Form({ items, setItems }: any) {
 		}));
 
 		setItems([...items, { date, amount: parseInt(amount), description, file: file.name }]);
-		setOpen(true);
+		setOpenBackdrop(false);
+		setOpenSnackbar(true);
 	}, [items, session?.user?.email, setItems])
 
 	return <>
@@ -55,11 +60,14 @@ export default function Form({ items, setItems }: any) {
 			<Button aria-label='Submit Button' type='submit' variant='outlined'>Add Expense</Button>
 		</Toolbar>
 		<Snackbar
-			open={open}
+			open={openSnackbar}
 			autoHideDuration={2000}
-			onClose={() => setOpen(false)}
+			onClose={() => setOpenSnackbar(false)}
 			message="Expense Added Successfully"
 			ContentProps={{ sx: { justifyContent: 'center' } }}
 		/>
+		<Backdrop open={openBackdrop}>
+			<CircularProgress />
+		</Backdrop>
 	</>
 }
