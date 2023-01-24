@@ -60,7 +60,7 @@ export default function Home({ data }: any) {
         <TableRow>
           <TableCell align='center'>Date</TableCell>
           <TableCell>Amount</TableCell>
-          <TableCell>Description</TableCell>
+          <TableCell align='center'>Description</TableCell>
           <TableCell align='center'>File</TableCell>
         </TableRow>
       </TableHead>
