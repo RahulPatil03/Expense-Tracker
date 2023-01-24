@@ -2,10 +2,11 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+import { createContext, useEffect, useReducer, useState } from 'react';
 
 export default function Guest() {
-    const { data: session, status } = useSession();
+    createContext(null);
+    const { status } = useSession();
     const [openBackdrop, setOpenBackdrop] = useState(status === 'loading');
 
     useEffect(() => {
