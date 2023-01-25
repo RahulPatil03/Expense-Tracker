@@ -14,7 +14,7 @@ import Typography from '@mui/material/Typography';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
-import Guest from './Guest';
+import Guest from './guest';
 
 export default function Layout({ children }: any) {
     const { data: session, status } = useSession();
