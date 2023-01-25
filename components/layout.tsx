@@ -1,3 +1,4 @@
+import Guest from '@/components/Guest';
 import { useAppContext } from '@/pages/_app';
 import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
@@ -14,7 +15,6 @@ import Typography from '@mui/material/Typography';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
-import Guest from './Guest';
 
 export default function Layout({ children }: any) {
     const { data: session, status } = useSession();
@@ -35,6 +35,7 @@ export default function Layout({ children }: any) {
     }, [dispatch]);
 
     return <>
+        
         <AppBar>
             <Toolbar>
                 <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>Expense Tracker</Typography>
