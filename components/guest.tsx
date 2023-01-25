@@ -6,6 +6,7 @@ export default function Guest() {
         <Head>
             <title>Not Logged In</title>
         </Head>
+        
         <Typography variant='h5' component='p' textAlign='center'>Login to manage your expenses here</Typography>
     </>;
 }
